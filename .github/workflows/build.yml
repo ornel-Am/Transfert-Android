@@ -24,6 +24,10 @@ jobs:
       
       - name: Accept Android SDK licenses
         run: |
+          # Attendre que le SDK soit téléchargé
+          cd android
+          buildozer android_clean || true
+          yes | ~/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager --licenses || true
           yes | ~/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager --licenses || true
       
       - name: Build APK
@@ -35,6 +39,7 @@ jobs:
         with:
           name: Transfert-Android
           path: android/bin/*.apk
+          if-no-files-found: warn
       
       - uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
